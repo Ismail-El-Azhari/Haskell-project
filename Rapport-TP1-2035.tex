@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{ift2035-TP1-Rapport}
+\author{Jean-Yves Grenier et Ismail El Azhari }
+\date{October 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Le devoir donné s'est présenté difficile et incompréhensible à première lecture, il a fallu prendre du temps, en fait les premiers 4 ou 5 jours, pour bien comprendre ce qui était demander, comment notre langage fonctionner et en quelle mesure sa ressembler à des choses vues en cours, dans cette étape, l'aide fournie par les démonstrateurs et par le forum sur Studium était primordiale dans notre avancement.
+
+Au fur et à mesure qu'on avançait, le devoir devenait de plus en plus difficile, et on créait des fonctions auxiliaires juste pour ensuite se rendre compte de leur futilité et devoir les éliminer, la réalisation de ce Tp était une aventure avec des haut et des bas, mais on se sentait euphoriques quand finalement quelque chose fonctionner correctement, et qu'on a vaincu le problème.
+
+Voici quelques exemples des défies que nous avons rencontré lors de la réalisation de ce TP.
+
+\section{Les symboles}
+
+Le tout premier problème qu'on a rencontre était celui d'écrire une fonction qui cherchera si notre symbole était dans l'environement ou non, et de nous retourner son indice pour pouvoir le passer par après a eval et trouver s'il m'agit bien d'une fonction ou non.
+
+Là nous avons pensé au début à creer un autre environement qui contenait les 4 symboles à evaluer et utiliser cet environement à la place, mais on s'est vite rendu compte que les fonctions prédéfinies (Val Of ,dexpof.....) utilisaient l'Environnement env0, ce qui nous a poussé à adapter nos fonctions de recherche dans l'environnant elookups et elookupv pour accommoder cela.
+
+\section{Appel de fonction du type (f a b)}
+
+Maintenant que nous savions si un symbole donné était une fonction ou non, il fallait trouver comment gérer le cas d'un appel de fonctions avec 2 arguments, au début on a commencé par traiter chaque symbole tout seul, et on a vu qu'on était en train d'écrire la même ligne 4 fois, alors on a changé le symbole par " f " pour unifier ces 4 lignes.
+Un autre défi était celui d'évaluer l'appel de cette fonction, on a vu un truc très similaire dans l'exercice 3.5, alors on a essayé de réécrire la même chose en l'adaptant à notre code, mais même si cela paraît facile, au début on a commis plusieurs erreurs, et en fait c'est ici que l'inférence de type s'est avérée très utile, parce qu'on pouvait voir qui est équivalent à quoi dans notre devoir en sachant son type.
+
+Puis le dernier problème rencontré pour cette partie était celui de la récursion, et celui-là à demander beaucoup plus de temps pour le résoudre, vu qu'ont pensé que la seule manière d'avoir la récursion était de créer une fonction auxiliaire qui elle-même appellera la fonction originale. Or, après avoir bien pensé à ce problème, on  a trouvé que la solution était de généraliser notre fonction, en ajoutant une deuxième ligne qui précise que le premier argument doit être du type Lnum, mais le deuxième n'était qu'une expression, une expression sur laquelle on appellera la fonction s2l par la suite pour l'évaluer à un Lnum.
+
+Après tout ce calvaire et après avoir commencé à rédiger ce rapport, on s'est rendu compte que notre lexp et dexp ne pas traiter le cas de (+ x y), et là, on a vu que 3 de nos lignes pouvaient être remplacé par une seule qui traiter ceci commen un appelle de fonction suivie de deux expressions.
+
+\section{add et l'idée rejetée}
+
+Le cas de "list" était vraiment facile pour nous et on est arrivé à le faire correctement dès le premier essai, par contre l'add était un peu plus difficile à voir.
+
+surtout quand il s'agissait de le généraliser, l'idée de la généralisation reste la même mais parfois on se trompe en pensant qu'il y a une autre façon de voir les choses.
+
+On a cru que peut être pour add et pour les autres fonctions, il fallait d'abord transformer tout sexp en une liste de sexp, et voir le nombre d'arguments qui suit pour savoir s'il y aura une récursion ou non.
+
+Mais on a rejeté cette idée, car on a trouvé que si on peut résoudre le problème simplement avec le pattern matching d'Haskell et l'appel de fonctions récursif sur les arguments à droite, il n'y avait pas une raison d'aller compliquer les choses avec notre nouvelle fonction, et à la fin nous l'avons supprimée car elle ne servait pas vraiment à grand-chose.
+
+\section{let}
+
+Pour faire le "let", nous avons rencontré deux problèmes principaux, un qu'on a trouvé comment contourner et un autre que malheureusement on n'a pas trouvé un moyen de le solutionner.
+
+Le premier problème était celui de comment passer de 2 arguments (Var, valeur) à un seul argument Dfix.
+Et là nous avons pensé d'une façon mathématique à rejoindre un String et un Int en répétant le String Int-fois.
+
+Donc à la place d'ajouter la variable x par exemple dans notre environement, en ajoutant une suite du symbole "a" comme notre variable et retourner sa position comme Dref idx, et quand on aura besoin de sa valeur, on n'a qu'à aller chercher le String dans cette position et le transformer en Int pour l'ajouter ensuite à l'environnement comme valeur Vnum int.
+
+Mais après avoir codé cette partie, on s'est vite rendu compte qu'on ne pouvait plus accéder à la partie  Var de env0, car dans eval on manipule seulement la partie value, donc il y a une perte d'information selon notre approche puisqu'on pourra plus revenir en arrière et récupérer la valeur de notre variable.
+
+Mais malheureusement quelle que soit l'approche à laquelle on pense, on se retrouve face aux deuxième problème, celui d'ajouter un élément à l'environnement. Nous savons comment le faire localement dans une même ligne, mais nous n'arrivons pas à voir comment faire l'ajout d'une façon permanente d'une valeur à une partie de notre environement.
+
+
+\section{fn}
+
+Pour le fn, nous avons pu écrire le lexp et le dexp, mais nous avons rencontré le même problème pour eval, celui d'ajouter la variable dans l'environnement, donc ne nous pouvions pas avancer.
+\section{match}
+
+Nous n'avons pas essayer d'implémenter le match, vu qu'on arriver pas à faire le let et le fn.
+
+
+\end{document}
